@@ -5,6 +5,15 @@ let tickectControl = new TikectControl();
 
 io.on('connection', (client) => {
 
+    let data = {
+        tikectActual: tickectControl.getTicketActual(),
+        ultimos4Tickets: tickectControl.getUltimos4Tikects()
+
+    }
+
+
+    client.emit('ticketActual', data)
+
     client.on('siguienteTicket', () => {
 
         let data = {
@@ -14,27 +23,13 @@ io.on('connection', (client) => {
         data = JSON.stringify(data);
         client.emit('siguienteTicket', data);
 
-        console.log(data);
-
-
-
     });
 
-    let data = {
-        tikectActual: tickectControl.getTicketActual(),
-        ultimos4Tickets: tickectControl.getUltimos4Tikects()
 
-    }
-
-
-
-
-
-
-    client.emit('ticketActual', data)
 
 
     client.on('atenderTicket', (data, callback) => {
+
 
         if (!data.escritorio) {
 
@@ -56,7 +51,7 @@ io.on('connection', (client) => {
 
         }
 
-        client.emit('ticketActual', dataUltimos4Tickes)
+        client.broadcast.emit('ticketActual', dataUltimos4Tickes)
 
 
 
